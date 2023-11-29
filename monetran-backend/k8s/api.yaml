@@ -27,11 +27,10 @@ spec:
             - name: DB_USER
               value: root
             - name: DB_PASS
-              value: postgres123
-              # valueFrom:
-              #   secretKeyRef:
-              #     name: passwd
-              #     key: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: passwd
+                  key: DB_PASS
             - name: DB_HOST
               value: "db"
             - name: DB_PORT
