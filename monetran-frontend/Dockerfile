@@ -1,0 +1,36 @@
+# Stage 1
+FROM node:10 as react-build
+
+#ARG BASE_URL
+ARG REACT_APP_API_BASE_URL
+ARG REACT_APP_GOOGLE_API_CLIENT_ID
+ARG REACT_APP_STRIPE_PUBLIC_KEY
+ARG REACT_APP_GOOGLE_STORAGE_BUCKET_NAME
+ARG REACT_APP_BUGSNAG_API_KEY
+
+#ENV REACT_APP_API_BASE_URL ${BASE_URL}
+ENV REACT_APP_API_BASE_URL=${REACT_APP_API_BASE_URL}
+ENV REACT_APP_GOOGLE_API_CLIENT_ID=${REACT_APP_GOOGLE_API_CLIENT_ID}
+ENV REACT_APP_STRIPE_PUBLIC_KEY=${REACT_APP_STRIPE_PUBLIC_KEY}
+ENV REACT_APP_GOOGLE_STORAGE_BUCKET_NAME=${REACT_APP_GOOGLE_STORAGE_BUCKET_NAME}
+ENV REACT_APP_BUGSNAG_API_KEY=${REACT_APP_BUGSNAG_API_KEY}
+
+RUN env | sort
+WORKDIR /app
+COPY . ./
+RUN rm -rf build/*
+RUN yarn
+RUN yarn upgrade caniuse-lite browserslist
+RUN yarn build
+
+# Stage 2 - the production environment
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=react-build /app/build /var/www
+
+# copy stellar.toml
+COPY stellar.toml /var/www/.well-known/stellar.toml
+
+ENV NODE_ENV="development"
+EXPOSE 80/tcp
+CMD ["nginx", "-g", "daemon off;"]

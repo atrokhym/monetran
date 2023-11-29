@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+  mt-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_URL: 'http://192.168.1.22:5000'
+        REACT_APP_API_BASE_URL: 'http://192.168.1.22:5000'
+        REACT_APP_GOOGLE_API_CLIENT_ID: '268606524002-pi6saipm3eo5b6u5kaa00ual8l8jjulb.apps.googleusercontent.com'
+        REACT_APP_STRIPE_PUBLIC_KEY: 'pk_test_MbM51N77GwDXh0o3pn0gX5HM00Nk6HqP2z'
+        REACT_APP_GOOGLE_STORAGE_BUCKET_NAME: 'monetran-docs'
+        REACT_APP_BUGSNAG_API_KEY: '352e10493cbe3d94a98a70465786537d'
+    container_name: mt-web
+    volumes:
+      - .:/myapp
+    ports:
+      - "80:80"
+      #- "3000:3000"
+    environment:
+      REACT_APP_API_BASE_URL: 'http://192.168.1.22:5000'
+      REACT_APP_GOOGLE_API_CLIENT_ID: '268606524002-pi6saipm3eo5b6u5kaa00ual8l8jjulb.apps.googleusercontent.com'
+      REACT_APP_STRIPE_PUBLIC_KEY: 'pk_test_MbM51N77GwDXh0o3pn0gX5HM00Nk6HqP2z'
+      REACT_APP_BUGSNAG_API_KEY: '352e10493cbe3d94a98a70465786537d'
+      #NODE_ENV: 'development'
+    # env_file:
+    #   - .env
+

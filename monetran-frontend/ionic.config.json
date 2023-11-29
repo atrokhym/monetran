@@ -1,0 +1,8 @@
+{
+  "name": "walletapp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
+

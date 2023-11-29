@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt-bridge-prod
+  labels:
+    app: mt-bridge-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mt-bridge-prod
+  template:
+    metadata:
+      labels:
+        app: mt-bridge-prod
+    spec:
+      containers:
+        - name: mt-bridge-prod
+          image: gcr.io/$PROJECT_ID/monetran-backend_bridge-prod
+          env:
+          - name: horizon
+            value: "https://horizon.stellar.org"
+          - name: network_passphrase
+            value: "Public Global Stellar Network ; September 2015"
+
+          - name: DB_NAME
+            value: monetran
+          - name: DB_USER
+            value: "root"
+
+          - name: DB_PASS
+            #value: postgres123
+            valueFrom:
+              secretKeyRef:
+                name: mysecret.prod
+                key: DB_PASS
+
+          - name: WALLET_PUB_KEY
+            value: "GATF2EUO7KVF72TPDU6XPG4V4TUZKDSSP3MB53DK5RHMRDWUKDAPYAJT"
+          - name: WALLET_SEC_KEY
+            #value: "SAXZGO2P2F2HZSYFVDJETJYXIQ6JOM4EW7TBBBGRPN7X6JWP5ISTSEIA"
+            valueFrom:
+              secretKeyRef:
+                name: mysecret.prod
+                key: WALLET_SEC_KEY
+
+          - name: MNDA_ASSET_ISSUER
+            value: "GBLCYS47LRXVO3I3VYB2VWH642EKKCHAC3DLMKRG2RY4RW2KRS7OYILM"
+            
+          ports:
+            - containerPort: 8006
+              name: mt-bridge-prod
+          readinessProbe:
+            httpGet:
+              path: /admin/
+              port: 8006
+          volumeMounts:
+            - name: bridge-persistent-storage-prod
+              mountPath: /usr/src/bridge
+
+      volumes:
+        - name: bridge-persistent-storage-prod
+          persistentVolumeClaim:
+            claimName: bridge-volumeclaim-prod
+

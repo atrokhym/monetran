@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bridge
+  labels:
+    app: bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bridge
+  template:
+    metadata:
+      labels:
+        app: bridge
+    spec:
+      containers:
+        - image: 
+            #gcr.io/phrasal-bond-247802/anchor_bridge
+            gcr.io/flawless-point-232417/anchor_bridge            
+          name: bridge
+          env:
+          - name: DB_NAME
+            value: bridge
+          - name: DB_USER
+            value: "root"
+          - name: POSTGRES_PASSWORD
+            value: postgres123
+          # - name: DB_PASS
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: passwd
+          #       key: DB_PASS
+          ports:
+            - containerPort: 8006
+              name: bridge
+          readinessProbe:
+            httpGet:
+              path: /admin/
+              port: 8006
+
+      #     volumeMounts:
+      #       - name: bridge-persistent-storage
+      #         mountPath: /usr/src/bridge
+      # volumes:
+      #   - name: bridge-persistent-storage
+      #     persistentVolumeClaim:
+      #       claimName: bridge-volumeclaim

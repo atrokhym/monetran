@@ -1,0 +1,98 @@
+steps:
+
+#step 1
+- name: 'gcr.io/cloud-builders/docker' 
+  entrypoint: 'bash'
+  args: [
+   '-c', 
+   'docker pull gcr.io/$PROJECT_ID/monetran-backend_api:latest || exit 0'
+  ]
+
+#step 2
+
+  # build api
+- name: gcr.io/cloud-builders/docker
+  args: [
+   'build', 
+   '-f', 
+   'api/Dockerfile.dev',
+   '-t', 
+   'gcr.io/$PROJECT_ID/monetran-backend_api:$TAG_NAME',
+   '-t', 
+   'gcr.io/$PROJECT_ID/monetran-backend_api:latest',
+   'api'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/monetran-backend_api:$TAG_NAME']
+
+  #
+  # build bridge
+  #
+
+- name: 'gcr.io/cloud-builders/docker' 
+  entrypoint: 'bash'
+  args: [
+   '-c', 
+   'docker pull gcr.io/$PROJECT_ID/monetran-backend_bridge:latest || exit 0'
+  ]
+
+- name: gcr.io/cloud-builders/docker
+  args: [
+   'build', 
+   '-f', 
+   'bridge-service/Dockerfile',
+   '-t', 
+   'gcr.io/$PROJECT_ID/monetran-backend_bridge:$TAG_NAME',
+   '-t', 
+   'gcr.io/$PROJECT_ID/monetran-backend_bridge:latest',
+   'bridge-service'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/monetran-backend_bridge:$TAG_NAME']
+
+#step 3
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'k8s/']
+  # env:
+  # - 'CLOUDSDK_COMPUTE_ZONE=<cluster-zone>'
+  # - 'CLOUDSDK_CONTAINER_CLUSTER=<cluster-name>'
+
+#step 4
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: [
+   'set', 
+   'image', 
+   'deployment', 
+   'mt-api', 
+   'mt-api=gcr.io/$PROJECT_ID/monetran-backend_api:$TAG_NAME'
+  ]
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: [
+   'set', 
+   'image', 
+   'deployment', 
+   'mt-bridge', 
+   'mt-bridge=gcr.io/$PROJECT_ID/monetran-backend_bridge:$TAG_NAME'
+  ]
+  # env:
+  # - 'CLOUDSDK_COMPUTE_ZONE=<cluster-zone>'
+  # - 'CLOUDSDK_CONTAINER_CLUSTER=<cluster-name>'
+
+# push images to Google Container Registry with tags
+options:
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=standard-cluster-1'
+  - 'PROJECT_ID=$PROJECT_ID'
+
+images: [
+   'gcr.io/$PROJECT_ID/monetran-backend_api:$TAG_NAME',
+   'gcr.io/$PROJECT_ID/monetran-backend_api:latest',
+   'gcr.io/$PROJECT_ID/monetran-backend_bridge:$TAG_NAME',
+   'gcr.io/$PROJECT_ID/monetran-backend_bridge:latest'
+  ]
+
+timeout: 1200s

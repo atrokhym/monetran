@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer
+  labels:
+    app: transfer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transfer
+  template:
+    metadata:
+      labels:
+        app: transfer
+    spec:
+      containers:
+        - image: 
+            #gcr.io/phrasal-bond-247802/anchor_transfer
+            gcr.io/flawless-point-232417/anchor_transfer        
+          name: transfer
+          ports:
+            - containerPort: 5000
+              name: transfer
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 5000

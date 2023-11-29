@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt-web
+  labels:
+    app: mt-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mt-web
+  template:
+    metadata:
+      labels:
+        app: mt-web
+    spec:
+      containers:
+        - image: gcr.io/$PROJECT_ID/monetran-project_web
+          name: mt-web
+          #
+          # The environment variables are embedded during the build time. !!!!!!!!!
+          #
+          env:
+            - name: REACT_APP_API_BASE_URL
+              value: "http://mt-api:5000"
+            - name: REACT_APP_GOOGLE_API_CLIENT_ID
+              value: "268606524002-pi6saipm3eo5b6u5kaa00ual8l8jjulb.apps.googleusercontent.com"
+            - name: REACT_APP_STRIPE_PUBLIC_KEY
+              value: "pk_test_MbM51N77GwDXh0o3pn0gX5HM00Nk6HqP2z"
+            #- name: REACT_APP_BUGSNAG_API_KEY
+            #  value: "352e10493cbe3d94a98a70465786537d"
+            # - name: NODE_ENV
+            #   value: "development"
+          ports:
+            - containerPort: 80
+              name: mt-web
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 80

@@ -1,0 +1,49 @@
+#FROM ubuntu:18.04
+FROM debian:buster-slim
+
+
+RUN apt-get update
+RUN apt-get -y install curl gettext-base
+
+# args for build
+#
+#ARG horizon
+#ARG network_passphrase
+#ARG DB_USER
+#ARG DB_PASS
+#ARG DB_NAME
+#ARG MNDA_ASSET_ISSUER
+#ARG WALLET_PUB_KEY
+#ARG WALLET_SEC_KEY
+
+ENV ENV="prod"
+#ENV horizon $horizon
+#ENV network_passphrase $network_passphrase
+#ENV DB_USER $DB_USER
+#ENV DB_PASS $DB_PASS
+#ENV DB_NAME $DB_NAME
+#ENV MNDA_ASSET_ISSUER $MNDA_ASSET_ISSUER
+#ENV WALLET_PUB_KEY $WALLET_PUB_KEY
+#ENV WALLET_SEC_KEY $WALLET_SEC_KEY
+
+
+COPY install.sh /tmp/
+RUN /tmp/install.sh
+
+RUN env
+
+#RUN cat horizontestnetstellarorg.pem >> /etc/ssl/certs/ca-certificates.crt
+#COPY bridge.cfg /etc/bridge.cfg
+#COPY bridge /usr/local/bin/bridge
+COPY bridge.cfg.template.prod /etc/bridge.cfg.template
+COPY run.sh /run.sh
+
+WORKDIR /tmp
+
+ENV BRIDGE_CONFIG_FILE=/etc/bridge.cfg
+ENV BRIDGE_SKIP_DB_INIT=false
+
+EXPOSE 8006
+
+ENTRYPOINT ["/run.sh"]
+#CMD ["/run.sh"]

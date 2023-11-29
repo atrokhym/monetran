@@ -1,0 +1,33 @@
+FROM golang:alpine AS main-env
+
+ENV GOBIN /go/bin
+
+RUN mkdir /app
+RUN mkdir -p /go/src/github.com/codehakase/monetran/api
+ADD . /go/src/github.com/codehakase/monetran/api/
+
+WORKDIR /go/src/github.com/codehakase/monetran/api
+RUN cd /go/src/github.com/codehakase/monetran/api
+
+RUN apk add git curl bash govendor
+RUN curl -fsSL -o /bin/dep https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64 && chmod +x /bin/dep
+###RUN cat gogooglesourcecom.pem >> /etc/ssl/certs/ca-certificates.crt
+RUN dep ensure -vendor-only
+RUN govendor fetch +outside
+RUN go mod vendor
+RUN GOOS=linux GOARCH=amd64 go build -i -o monetran -ldflags="-s -w" cmd/monetran/main.go
+
+FROM alpine
+WORKDIR /app
+COPY --from=main-env /go/src/github.com/codehakase/monetran/api/monetran /app
+COPY --from=main-env /go/src/github.com/codehakase/monetran/api/configs/google_service_creds.json /app
+###COPY --from=main-env /go/src/github.com/codehakase/monetran/api/.env /app
+COPY --from=main-env /go/src/github.com/codehakase/monetran/api/email/templates/verifyemail.html /app
+
+###CMD source /app/.env
+
+ENV VERIFY_EMAIL_TEMP_LOC=/app/verifyemail.html
+
+EXPOSE 5000
+
+ENTRYPOINT ./monetran

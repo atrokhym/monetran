@@ -1,0 +1,14 @@
+[Unit]
+Description=Start/Stop Monetran Bridge Stellar Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/ubuntu/api/bin/start
+User=root
+Restart=always
+RestartSec=10
+
+WorkingDirectory=/home/ubuntu/api/bin/
+[Install]
+WantedBy=multi-user.target

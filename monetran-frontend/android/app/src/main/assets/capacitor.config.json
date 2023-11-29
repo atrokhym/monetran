@@ -1,0 +1,18 @@
+{
+  "appId": "com.monetran.walletapp",
+  "appName": "walletapp",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "serverClientId": "268606524002-k9l3e4g14abpof32sces2r1558n1ndct.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
+}
+

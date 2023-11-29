@@ -1,0 +1,36 @@
+# Bridge server bridge.cfg example
+
+port = 8006
+horizon = "https://horizon.stellar.org"
+network_passphrase = "Public Global Stellar Network ; September 2015"
+# We'll fill this in once we set up a compliance server
+compliance = ""
+api_key = ""
+mac_key = ""
+
+# This describes the assets that can be sent and received.
+[[assets]]
+code="XLM"
+
+[[assets]]
+code = "MNDA"
+issuer = "${MNDA_ASSET_ISSUER}"
+
+[database]
+type = "postgres"
+url = "postgres://${DB_USER}:${DB_PASS}@db-prod/${DB_NAME}?sslmode=disable"
+
+[accounts]
+base_seed = "${WALLET_SEC_KEY}"
+receiving_account_id = "${WALLET_PUB_KEY}"
+#authorizing_seed = ""
+#issuing_account_id = ""
+
+[callbacks]
+# The server will send POST requests to this URL to notify you of payments
+receive = "http://mt-api-prod:5000/receive"
+
+#
+# to re-activate account
+# https://www.stellar.org/laboratory/#account-creator?network=test
+#

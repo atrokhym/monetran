@@ -1,0 +1,19 @@
+#FROM alpine
+FROM ubuntu:18.04
+RUN apt-get update
+RUN apt-get -y install ca-certificates
+COPY ./bridge-server/bin/bridge /usr/local/bin/
+COPY ./bridge.cfg /etc/
+COPY ./run-bridge.sh /usr/local/bin/
+
+WORKDIR /usr/local/bin
+#RUN ./bridge --migrate-db -c /etc/bridge.cfg
+#RUN cat /etc/hosts
+
+EXPOSE 8006
+
+ENV BRIDGE_CONFIG_FILE=/etc/bridge.cfg
+ENV BRIDGE_SKIP_DB_INIT=false
+
+#ENTRYPOINT ["/usr/local/bin/bridge -c /etc/bridge.cfg"]
+ENTRYPOINT ["./run-bridge.sh"]

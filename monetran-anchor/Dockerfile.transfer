@@ -1,0 +1,46 @@
+# --- Installing stage
+FROM node:8 AS installer
+
+WORKDIR /usr/src/app
+
+ARG NODE_ENV=development
+ARG NPM_TOKEN=
+ENV NODE_ENV=${NODE_ENV}
+
+COPY package*.json ./
+RUN npm install --quiet
+#RUN npm install -g tsc
+#RUN npm install concurrently
+RUN npm install -g typescript
+#RUN tsc -v
+
+# ---
+
+# Building stage
+FROM installer AS builder
+
+## Workdir is shared between the stage so let's reuse it as we neeed the packages
+WORKDIR /usr/src/app
+
+COPY ./src src
+COPY tsconfig.json .
+#RUN npm run build
+#RUN ./node_modules/.bin/tsc src/server.ts
+RUN tsc src/server.ts
+#RUN ls -al
+
+# ---
+
+# Running code under slim image (production part mostly)
+FROM node:8-slim
+
+## Clean new directory
+WORKDIR /app
+
+## We just need the build and package to execute the command
+COPY --from=builder /usr/src/app/src src
+COPY --from=builder /usr/src/app/node_modules node_modules
+COPY ./.env .
+#RUN npm i body-parser express dotenv request-promise-native request
+
+CMD [ "node", "src/server.js", "--ignore bridge-server" ]

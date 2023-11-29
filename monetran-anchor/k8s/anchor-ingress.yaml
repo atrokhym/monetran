@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: anchor-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "sandbox-ip-address"
+    networking.gke.io/managed-certificates: monetran-certificate
+    ingress.kubernetes.io/enable-cors: "true"
+spec:
+  rules:
+  - host: sandbox.monetran.com
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: portal
+          servicePort: 80
+      - path: /api/*
+        backend:
+          serviceName: transfer
+          servicePort: 5000
+      - path: /transfer/*
+        backend:
+          serviceName: transfer
+          servicePort: 5000
+      - path: /payment/*
+        backend:
+          serviceName: bridge
+          servicePort: 8006
+      - path: /admin/*
+        backend:
+          serviceName: bridge
+          servicePort: 8006

@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-ingress
+  annotations:
+    #kubernetes.io/ingress.global-static-ip-name: "web-static-ip"
+    kubernetes.io/ingress.global-static-ip-name: "sandbox-ip-address"
+    networking.gke.io/managed-certificates: monetran-app-certificate
+    ingress.kubernetes.io/enable-cors: "true"    
+spec:
+  rules:
+  - host: sandbox-app.monetran.com
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: mt-web
+          servicePort: 80
+      - path: /api/*
+        backend:
+          serviceName: mt-api
+          servicePort: 5000

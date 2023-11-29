@@ -1,0 +1,6 @@
+bin/
+.env
+cmd/monetran/.env
+Dockerfile.dev
+ctags
+tags

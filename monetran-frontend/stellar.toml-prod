@@ -1,0 +1,23 @@
+NETWORK_PASSPHRASE="Public Global Stellar Network ; September 2015"
+
+FEDERATION_SERVER = "https://wallet.monetran.com/federation"
+
+[DOCUMENTATION]
+ORG_NAME = "MONETRAN, LLC."
+ORG_OFFICIAL_EMAIL = "info@monetran.com"
+ORG_URL = "https://monetran.com"
+
+[[CURRENCIES]]
+code = "MNDA"
+conditions = "There will be initially 60 million MNDA"
+desc = "Moneda is a stable utility token issued by Monetran LLC https://wwww.monetran.com/ Moneda and Monetran LLC are SEC compliant and available to both U.S. and foreign investors"
+display_decimals = 7
+fixed_number = 60000000
+image = "https://www.monetran.com/wp-content/uploads/2018/07/monetran-coin_REVISED.png"
+issuer = "GBLCYS47LRXVO3I3VYB2VWH642EKKCHAC3DLMKRG2RY4RW2KRS7OYILM"
+name = "Moneda"
+status = "live"
+
+[[PRINCIPALS]]
+name = "Don Bielak"
+linkedin = "https://www.linkedin.com/in/don-bielak-193bb9a/"

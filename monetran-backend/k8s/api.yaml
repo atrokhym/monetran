@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt-api
+  labels:
+    app: mt-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mt-api
+  template:
+    metadata:
+      labels:
+        app: mt-api
+    spec:
+      containers:
+        - image: gcr.io/$PROJECT_ID/monetran-backend_api
+          name: mt-api
+          env:
+            - name: ENV
+              value: "dev"
+            - name: PORT
+              value: "5000"
+            - name: DB_TYPE
+              value: postgres
+            - name: DB_USER
+              value: root
+            - name: DB_PASS
+              value: postgres123
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: passwd
+              #     key: DB_PASS
+            - name: DB_HOST
+              value: "db"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "monetran"
+            - name: API_SECRET
+              value: "MY_SECRET.sandbox"
+            - name: APP_URL
+              value: "sandbox-app.monetran.com"
+            - name: EMAIL_PORT
+              value: "465"
+            - name: EMAIL_FROM
+              value: "do-not-reply@monetran.com"
+            - name: EMAIL_ADMIN
+              value: "monetransandbox@gmail.com"
+              #value: "monetran2@hotmail.com"
+            - name: EMAIL_HOSTNAME
+              value: "smtp.sendgrid.net"
+            - name: EMAIL_USER
+              value: "apikey"
+            - name: EMAIL_PASS
+              value: "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"
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: passwd
+              #     key: EMAIL_PASS              
+            - name: VERIFY_EMAIL_TEMP_LOC
+              value: "/app/verifyemail.html"
+            - name: APP_BUILD_DIR
+              value: "/path/to/build"
+            - name: WALLET_PUB_KEY
+              value: "GBTHLOH5QDMBL2J7RUVQQBEFHK7HB6UERE54XSABERJTXG4OURGEISVC"
+            - name: WALLET_SEC_KEY
+              value: "SAXZGO2P2F2HZSYFVDJETJYXIQ6JOM4EW7TBBBGRPN7X6JWP5ISTSEIA"
+            - name: APP_FED_URL
+              value: "account*sandbox-app.monetran.com"
+            - name: COWRIES_API_URL
+              value: "https://api.cowrie.exchange"
+            - name: PAYMENT_SRV_URL
+              value: "http://mt-bridge:8006/payment"
+            - name: NGN_RATE
+              value: "350"
+            - name: APP_FEE
+              value: "0.1"
+            - name: NOTIFY_EMAIL
+              value: "atrokhym@gmail.com"
+            - name: STELLAR_BASE_FEE
+              value: "0.00001"
+            - name: NGNT_WALLET_PUB_KEY
+              value: ""
+            - name: NGNT_WALLET_SEC_KEY
+              value: ""
+            - name: NGNT_ISSUER
+              value: ""
+            - name: STRIPE_TEST_KEY
+              value: "sk_test_k76HupulGhEswhWSXTEmkq1g00G6MKi4VO"
+            - name: GC_STORAGE_BUCKET
+              value: "monetran-docs"
+            - name: GC_PROJECT_ID
+              value: "flawless-point-232417"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/app/google_service_creds.json"
+            - name: BUGSNAG_API_KEY
+              value: "352e10493cbe3d94a98a70465786537d"
+            - name: ERROR_REPORTING_CLIENT
+              value: "stackdriver"
+            - name: DIST_PUB_KEY
+              value: "GCR4PPTA7ZYIP23Q3JOFXOXPSBVBQHUG43I4OFQKUO2NTZSGSQNTQOWQ"
+            - name: DIST_SEC_KEY
+              value: "SCWYNR4W6QDRPCHCQPABW6X6MGN2QKV6VOQ5DSVVKS7HMYP25UNCMVGW"
+            - name: MNDA_ASSET_ISSUER
+              value: "GBFBF57EJ4BIBFQJM2MUHYU4MQZLUAENXKXK3XGX24DDDMDRZMKFQ24B"
+          ports:
+            - containerPort: 5000
+              name: mt-api
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 5000

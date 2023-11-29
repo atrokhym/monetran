@@ -1,0 +1,109 @@
+
+# Address of the wallet VASP account. This value cannot be empty
+vaspAddr: 3746d42de6d89dde803abf7438e9c896
+# Private key of the wallet VASP account. This value cannot be empty
+vaspPrivateKey: {"wallet1":"78ba36a6f10fac0f885d9ad89f54f5c6d4bf432fe4afc3fa4b9d576712551c84"}
+# Wallet VASP compliance private key. This value cannot be empty
+vaspComplianceKey: 6d2005127edd7e22858954ca8542ce9202cb576f9e4628bf1a3b663d6300c7ca
+
+
+# Host name of the liquidity provider service
+liquidityProviderHost: lrw-liquidity-liquidity-emulator
+liquidityProviderPort: 8080
+
+custodyWalletAccountName: wallet1
+
+walletAdminUsername: "admin@diem"
+
+gasCurrencyCode: "XUS"
+
+# Diem chain ID. Should be modified if deploying not for testnet
+chainId: 2
+
+sdk:
+  # Diem JSON-RPC API URL. Should be modified if deploying not for testnet
+  jsonRpc: "https://testnet.diem.com/v1"
+  faucet: "http://testnet.diem.com/mint"
+
+images:
+  pullPolicy: Always
+  backend: gcr.io/flawless-point-232417/lrw_backend
+  #frontend: gcr.io/flawless-point-232417/lrw_frontend
+  frontend: gcr.io/flawless-point-232417/lrw_gateway
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+apiPath: "/api"
+
+workers:
+  create: false
+  numProcs: 2
+  numThreads: 2
+
+
+peripherals:
+  redis:
+    # Should a database service be created?
+    # If false, host:port should point to an existing DB instance
+    create: false
+    image: "redis:5"
+    # if redis is created by this helm chart, there is no need to fill the following
+    host: ""
+    port: 6379
+    persistence: {}
+
+  database:
+    # Should a database service be created?
+    # If false, host:port should point to an existing DB instance
+    create: false
+    image: "lrw_db"
+    # if database is created by this helm chart, there is no need to fill the following
+    protocol: "postgresql"
+    username: "backenduser"
+    password: "backendpassword"
+    host: "postgresql://backenduser:backendpassword@db/backend_db"
+    port: 5432
+    dbName: "backend_db"
+    persistence: {}
+    #url: "postgresql://backenduser:backendpassword@db/backend_db"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: NodePort
+  #ClusterIP
+  port: 8080
+  targetPort: 8080
+
+ingress:
+  enabled: false
+  host: sandbox.monetran.com
+  annotations: {}
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

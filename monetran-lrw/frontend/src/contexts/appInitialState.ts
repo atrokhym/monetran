@@ -1,0 +1,100 @@
+import { AppSettings } from "../interfaces/settings";
+
+export const initialState: AppSettings = {
+  network: "",
+  currencies: {
+    XUS: {
+      name: "XUS",
+      symbol: "XUS",
+      sign: "≋XUS",
+      rates: {
+        USD: 1,
+        EUR: 0.85,
+        GBP: 0.8,
+        CHF: 1,
+        CAD: 1,
+        AUD: 1,
+        NZD: 1,
+        JPY: 1,
+        MXN: 20,
+      },
+    },
+    USDC: {
+      name: "USDC",
+      symbol: "USDC",
+      sign: "≋USDC",
+      rates: {
+        USD: 1,
+        EUR: 0.85,
+        GBP: 0.8,
+        CHF: 1,
+        CAD: 1,
+        AUD: 1,
+        NZD: 1,
+        JPY: 1,
+        MXN: 20,
+      },
+    },
+  },
+  fiatCurrencies: {
+    USD: {
+      name: "USD",
+      symbol: "USD",
+      sign: "$",
+      rates: {},
+    },
+    EUR: {
+      name: "EUR",
+      symbol: "EUR",
+      sign: "€",
+      rates: {},    },
+    GBP: {
+      name: "GBP",
+      symbol: "GBP",
+      sign: "£",
+      rates: {},
+    },
+    CHF: {
+      name: "CHF",
+      symbol: "CHF",
+      sign: "Fr",
+      rates: {},
+    },
+    CAD: {
+      name: "CAD",
+      symbol: "CAD",
+      sign: "$",
+      rates: {},
+    },
+    AUD: {
+      name: "AUD",
+      symbol: "AUD",
+      sign: "$",
+      rates: {},
+    },
+    NZD: {
+      name: "NZD",
+      symbol: "NZD",
+      sign: "$",
+      rates: {},
+    },
+    JPY: {
+      name: "JPY",
+      symbol: "JPY",
+      sign: "¥",
+      rates: {},
+    },
+    MXN: {
+      name: "MXN",
+      symbol: "MXN",
+      sign: "$",
+      rates: {},
+    },
+  },
+  user: undefined,
+  account: undefined,
+  paymentMethods: undefined,
+  walletTotals: { balances: [], userCount: -1 },
+  language: "en",
+  defaultFiatCurrencyCode: "USD",
+};

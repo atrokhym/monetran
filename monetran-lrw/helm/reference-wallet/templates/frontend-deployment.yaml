@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "reference-wallet.fullname" . }}-frontend
+  labels:
+    app: {{ include "reference-wallet.fullname" . }}-frontend
+    {{- include "reference-wallet.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      app: {{ include "reference-wallet.fullname" . }}-frontend
+      {{- include "reference-wallet.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        app: {{ include "reference-wallet.fullname" . }}-frontend
+        {{- include "reference-wallet.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "reference-wallet.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - image: "{{ .Values.images.frontend }}"
+        imagePullPolicy: {{ .Values.images.pullPolicy }}
+        name: lrw-frontend
+        env:
+        - name: PORT
+          value: {{ .Values.service.targetPort | quote }}
+        - name: NODE_ENV
+          value: "development"          
+        ports:
+          - name: http
+            containerPort: {{ .Values.service.targetPort }}
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+            httpHeaders:
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3

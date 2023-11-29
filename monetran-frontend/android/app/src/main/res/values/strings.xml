@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">walletapp</string>
+    <string name="title_activity_main">walletapp</string>
+    <string name="package_name">com.monetran.walletapp</string>
+    <string name="custom_url_scheme">com.monetran.walletapp</string>
+    <string name="server_client_id">268606524002-k9l3e4g14abpof32sces2r1558n1ndct.apps.googleusercontent.com</string>
+</resources>

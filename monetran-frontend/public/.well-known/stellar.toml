@@ -1,0 +1,12 @@
+TRANSFER_SERVER="https://wallet.monetran.com/transfer/"
+FEDERATION_SERVER="https://sandbox-app.monetran.com/federation"
+
+[[CURRENCIES]]
+code="MNDA"
+conditions = "There will only ever be 1 million MNDA"
+desc = "Moneda is a stable utility token issued by Monetran LLC https://monetran.com/ Moneda and Monetran LLC are SEC compliant and available to both U.S. and foreign investors"
+display_decimals = 2
+fixed_number = 1000000
+image = "https://www.monetran.com/wp-content/uploads/2018/07/monetran-coin_REVISED.png"
+issuer="GBFBF57EJ4BIBFQJM2MUHYU4MQZLUAENXKXK3XGX24DDDMDRZMKFQ24B"
+name = "Moneda"

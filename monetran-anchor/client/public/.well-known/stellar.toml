@@ -1,0 +1,6 @@
+TRANSFER_SERVER="https://sandbox.monetran.com/transfer/"
+
+[[CURRENCIES]]
+code="MNDA"
+# this value also exists in clientConfig, bridge.cfg, serverConfig
+issuer="GBFBF57EJ4BIBFQJM2MUHYU4MQZLUAENXKXK3XGX24DDDMDRZMKFQ24B"

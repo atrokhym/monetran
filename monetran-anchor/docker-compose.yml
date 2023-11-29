@@ -1,0 +1,91 @@
+version: '3'
+services:
+
+  
+# api:
+#   build:
+#     context: ./api
+#     dockerfile: Dockerfile.dev
+#   container_name: monetran-api
+#   #restart: unless-stopped
+#   volumes:
+#     - ./api:/usr/src/api
+#   ports:
+#     - 5000:5000
+#   networks:
+#     - monetran
+#   depends_on:
+#     - db
+#   links:
+#     - db:db
+#   environment:
+#     #- "ENV=${ENV}"
+#     - "DB_NAME=monetran"
+#     - "DB_USER=root"
+#     - "DB_PASS=postgres123"
+#     - "DB_HOST=db"
+#     - "DB_PORT=5432"
+#     - "PORT=5000"
+#     - "GIN_MODE=release"
+#   env_file:
+#     - .env
+
+  portal:
+    build:
+      context: .
+      dockerfile: Dockerfile.portal
+    ports:
+      - 80:80
+    networks:
+      - monetran
+
+  transfer:
+    build:
+      context: .
+      dockerfile: Dockerfile.transfer
+    ports:
+      - 5000:5000
+    networks:
+      - monetran
+    #depends_on:
+    #  - bridge
+
+
+  bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile.bridge
+    environment:
+      - "DB_NAME=bridge"
+      - "DB_USER=root"
+      - "DB_PASS=postgres123"
+    ports:
+      - 8006:8006
+    networks:
+      - monetran
+    depends_on:
+      - db
+
+
+  db:
+    image: postgres:10
+    container_name: db
+    #restart: unless-stopped
+    environment:
+      - "POSTGRES_DB=bridge"
+      - "POSTGRES_USER=root"
+      - "POSTGRES_PASSWORD=postgres123"
+    ports:
+      - '5432:5432'
+    networks:
+      - monetran
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+
+volumes:
+  dbdata:
+
+networks:
+  monetran:
+    driver: bridge
